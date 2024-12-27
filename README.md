@@ -1,11 +1,12 @@
-# Z-Wave - Vesternet Wall Controller 4-Button Blueprint for Home Assistant
+# Z-Wave - Fibaro FGWCEU-201 Walli Controller Blueprint for Home Assistant
 
-A blueprint to quickly assign the Scene buttons on the Vesternet Z-Wave Wall Controller (4 Button version)
+A blueprint to quickly assign the Scene buttons on the Fibaro Walli Controller
 
 This device has 4 keys and supports the following inputs:
-* Pressed
-* Held Down
-* Released
+* Up 1/2/3 Press
+* Down 1/2/3 Press
+* Up/Down Held Down
+* Up/Down Released
 
 Add this Blueprint to your Home Assistant automatically.
 
