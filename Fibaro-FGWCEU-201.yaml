@@ -1,0 +1,156 @@
+blueprint:
+  name: Z-Wave JS - Fibaro FGWCEU-201 Walli Controller
+  description:
+    "Create automations for Fibaro Walli Scene Controller [FGWCEU-201] using the Z-Wave JS integration.
+    
+    The bluepring is designed for vertical orientation (up/down) but can easily be adapted for horizoontal (left/right) operation
+
+    The automations supports the following triggers for each button:
+
+    * UP: 1/2/3 Press
+    * DOWN 1/2/3 Press
+    * UP: Held Down/Released
+    * DOWN: Held Down/Released
+ 
+    "
+  domain: automation
+  input:
+    fibaro_device:
+      name: Fibaro Walli Controller
+      description: List of available Fibaro Walli devices.
+      selector:
+        device:
+          filter:
+            - integration: zwave_js
+              manufacturer: Fibargroup
+              model: FGWCEU-201
+            - integration: zwave_js
+              manufacturer: Fibargroup
+              model: FGWCEU-201-8
+    U1_key_press:
+      name: Up Key Pressed
+      description: Action to run when Up button is pressed
+      default: []
+      selector:
+        action: {}
+    D1_key_press:
+      name: Down Key Pressed
+      description: Action to run when Down button is pressed
+      default: []
+      selector:
+        action: {}
+    U2_key_press:
+      name: Up Key Pressed Twice
+      description: Action to run when Up button is pressed twice
+      default: []
+      selector:
+        action: {}
+    D2_key_press:
+      name: Down Key Pressed Twice
+      description: Action to run when Down button is pressed twice
+      default: []
+      selector:
+        action: {}
+    U3_key_press:
+      name: Up Key Pressed Three Times
+      description: Action to run when Up button is pressed three times
+      default: []
+      selector:
+        action: {}
+    D3_key_press:
+      name: Down Key Pressed Three Times
+      description: Action to run when Down button is pressed three times
+      default: []
+      selector:
+        action: {}
+    U_key_held_down:
+      name: Up Key Held Down
+      description: Action to run when Up button is held down
+      default: []
+      selector:
+        action: {}
+    U_key_released:
+      name: Up Key Released
+      description: Action to run when Up button is released after being held down.
+      default: []
+      selector:
+        action: {}
+
+    D_key_held_down:
+      name: Down Button Held Down
+      description: Action to run when Down button is held down
+      default: []
+      selector:
+        action: {}
+    D_key_released:
+      name: Down Button Released
+      description: Action to run when Down button is released after being held down.
+      default: []
+      selector:
+        action: {}
+  source_url: https://github.com/beerygaz/ha-bp-Fiibaro-FGWCEU-201/blob/main/Fibaro-FGWCEU-201.yaml
+mode: single
+max_exceeded: silent
+variables:
+  device_id: !input "fibaro_device"
+trigger:
+  - platform: event
+    event_type: zwave_js_value_notification
+condition: "{{ trigger.event.data.device_id == device_id }}"
+action:
+  - variables:
+      property_key_name: "{{ trigger.event.data.property_key_name }}"
+      property_name: "{{ trigger.event.data.property_name }}"
+      label: "{{ trigger.event.data.label }}"
+      command_class_name: "{{ trigger.event.data.command_class_name }}"
+      value: "{{ trigger.event.data.value }}"
+      node_id: "{{ trigger.event.data.node_id }}"
+  - service: logbook.log
+    data:
+      name: Z-Wave JS
+      message:
+        "received event from node {{node_id}}: {{ command_class_name }} - {{
+        value }} - {{ label }}"
+  - choose:
+      - conditions:
+          "{{  property_name == 'scene' \n    and property_key_name == '001'\n\
+          \    and value == 'KeyPressed' }}\n"
+        sequence: !input "U1_key_press"
+      - conditions:
+          "{{  property_name == 'scene' \n    and property_key_name == '002'\n\
+          \    and value == 'KeyPressed' }}\n"
+        sequence: !input "D1_key_press"
+      - conditions:
+          "{{  property_name == 'scene' \n    and property_key_name == '001'\n\
+          \    and value == 'KeyPressed2x' }}\n"
+        sequence: !input "U2_key_press"
+      - conditions:
+          "{{  property_name == 'scene' \n    and property_key_name == '002'\n\
+          \    and value == 'KeyPressed2x' }}\n"
+        sequence: !input "D2_key_press"
+      - conditions:
+          "{{  property_name == 'scene' \n    and property_key_name == '001'\n\
+          \    and value == 'KeyPressed3x' }}\n"
+        sequence: !input "U3_key_press"
+      - conditions:
+          "{{  property_name == 'scene' \n    and property_key_name == '002'\n\
+          \    and value == 'KeyPressed3x' }}\n"
+        sequence: !input "D3_key_press"
+      - conditions:
+          "{{  property_name == 'scene' \n    and property_key_name == '001'\n\
+          \    and value == 'KeyHeldDown' \n}}\n"
+        sequence: !input "U_key_held_down"
+      - conditions:
+          "{{  property_name == 'scene' \n    and property_key_name == '001'\n\
+          \    and value == 'KeyReleased' \n}}\n"
+        sequence: !input "U_key_released"
+      - conditions:
+          "{{  property_name == 'scene' \n    and property_key_name == '002'\n\
+          \    and value == 'KeyHeldDown' \n}}\n"
+        sequence: !input "D_key_held_down"
+      - conditions:
+          "{{  property_name == 'scene' \n    and property_key_name == '002'\n\
+          \    and value == 'KeyReleased' \n}}\n"
+        sequence: !input "D_key_released"
+
+      
