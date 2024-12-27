@@ -3,13 +3,18 @@ blueprint:
   description:
     "Create automations for Fibaro Walli Scene Controller [FGWCEU-201] using the Z-Wave JS integration.
     
-    The bluepring is designed for vertical orientation (up/down) but can easily be adapted for horizoontal (left/right) operation
+    The blueprint is designed for vertical orientation (up/down) but can easily be adapted for horizoontal (left/right) operation
+
+    NOTE:  The Device must be set to *Scene Controller Mode* under the *Switch Configuration* section in the Z-WaveJS Control Panel (Section [42-112-0-20])
 
     The automations supports the following triggers for each button:
 
     * UP: 1/2/3 Press
+
     * DOWN 1/2/3 Press
+
     * UP: Held Down/Released
+
     * DOWN: Held Down/Released
  
     "
